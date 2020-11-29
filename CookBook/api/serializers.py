@@ -1,0 +1,21 @@
+from rest_framework import serializers
+from .models import User, Recipe
+
+class UserSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = User
+		fields = ('id','username','name','surname','created_at')
+
+
+class CreateUserSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = User
+		fields = ('username','password','name','surname')
+
+
+class RecipeSerializer(serializers.ModelSerializer):
+	user = UserSerializer(read_only=True)
+
+	class Meta:
+		model = Recipe
+		fields = ('name','creator','ingridients','description','created_at','user')
