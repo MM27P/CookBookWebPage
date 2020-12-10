@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render
 from django.http import HttpResponse
 from .serializers import CreateUserSerializer, UserSerializer, RecipeSerializer
@@ -25,11 +27,12 @@ class CreateUserView(APIView):
 			password = serializer.data.get('password')
 			name = serializer.data.get('name')
 			surname = serializer.data.get('surname')
+			email = serializer.data.get('email')
 			queryset = User.objects.filter(username = username)
 			if queryset.exists():
 				return Response("Username already in use", status = status.HTTP_400_BAD_REQUEST)
 			else:
-				user = User(username = username, password = password, name = name, surname = surname)
+				user = User(username = username, password = password, name = name, surname = surname, email = email)
 				user.save()
 			return Response(UserSerializer(user).data, status = status.HTTP_200_OK)
 
@@ -52,4 +55,27 @@ class CreateRecipeView(APIView):
 
 		return Response('{"Error": "Something Wrong with Recipe"}', status = status.HTTP_400_BAD_REQUEST)
 
+
+def login(request):
+	if request.method == "POST":
+		print(request)
+		username = request.POST['username']
+		password = request.POST['password']
+		user = authenticate(request,username=username,password=password)
+		if user is not None:
+			login(request,user)
+			return HttpResponse("You are logged in right now!")
+		else:
+			return HttpResponse("Sorry. Cannot login")
+	else:
+		return HttpResponse("Not available", status = status.HTTP_400_BAD_REQUEST)
+
+
+def logout(request):
+	logout(request)
+
+
+@login_required(login_url='/api/')
+def onlyForLoginUser(request):
+	return HttpResponse("You are worthy!!")
 	

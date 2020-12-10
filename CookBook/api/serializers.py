@@ -4,13 +4,13 @@ from .models import User, Recipe
 class UserSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
-		fields = ('id','username','name','surname','created_at')
+		fields = ('id','username','email','name','surname','created_at')
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = User
-		fields = ('username','password','name','surname')
+		fields = ('username','email','password','name','surname')
 
 
 class RecipeSerializer(serializers.ModelSerializer):
