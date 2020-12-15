@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render
 from django.http import HttpResponse
-from .serializers import CreateUserSerializer, UserSerializer, RecipeSerializer
+from .serializers import CreateUserSerializer, UserSerializer, RecipeSerializer, CreateRecipeSerializer
 from .models import User, Recipe
 from rest_framework import status, generics
 from rest_framework.response import Response
@@ -40,9 +40,29 @@ class RecipeView(generics.ListAPIView):
 	queryset = Recipe.objects.all()
 	serializer_class = RecipeSerializer
 
+class OneRecipeView(generics.ListAPIView):
+	serializer_class = RecipeSerializer
+	recipe_id_kwarg = "recipe_id"
+
+	def get_queryset(self):
+		recipe_id = self.kwargs.get(self.recipe_id_kwarg)
+		recipe = Recipe.objects.filter(id = recipe_id)
+		return recipe
+	
+
+class UserRecipeView(generics.ListAPIView):
+	serializer_class = RecipeSerializer
+	user_id_kwarg = "user_id"
+
+	def get_queryset(self):
+		user_id = self.kwargs.get(self.user_id_kwarg)
+		recipies = Recipe.objects.filter(creator = user_id)
+		return recipies
+
+	
 
 class CreateRecipeView(APIView):
-	serializer_class = RecipeSerializer
+	serializer_class = CreateRecipeSerializer
 
 	def post(self, request, format = None):
 		serializer = self.serializer_class(data = request.data)

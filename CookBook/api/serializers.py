@@ -18,4 +18,12 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Recipe
+		fields = ('id','name','creator','ingridients','description','created_at','user')
+
+
+class CreateRecipeSerializer(serializers.ModelSerializer):
+	user = UserSerializer(read_only=True)
+
+	class Meta:
+		model = Recipe
 		fields = ('name','creator','ingridients','description','created_at','user')
