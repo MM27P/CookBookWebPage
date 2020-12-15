@@ -58,7 +58,7 @@ class CreateRecipeView(APIView):
 
 def login(request):
 	if request.method == "POST":
-		print(request)
+		print(HTTP_400_BAD_REQUEST)
 		username = request.POST['username']
 		password = request.POST['password']
 		user = authenticate(request,username=username,password=password)
