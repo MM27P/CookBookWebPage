@@ -13,6 +13,17 @@ class CreateUserSerializer(serializers.ModelSerializer):
 		fields = ('username','email','password','name','surname')
 
 
+class UpdateUserPasswordSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = User
+		fields = ('id','username','password')
+
+class UpdateUserSerializer(serializers.ModelSerializer):
+	lookup_field = "username"
+	class Meta:
+		model = User
+		fields = ('id','username','email','name','surname','created_at')
+
 class RecipeSerializer(serializers.ModelSerializer):
 	user = UserSerializer(read_only=True)
 

@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render
 from django.http import HttpResponse
-from .serializers import CreateUserSerializer, UserSerializer, RecipeSerializer, CreateRecipeSerializer
+from .serializers import CreateUserSerializer, UserSerializer, UpdateUserPasswordSerializer, UpdateUserSerializer, RecipeSerializer, CreateRecipeSerializer
 from .models import User, Recipe
 from rest_framework import status, generics
 from rest_framework.response import Response
@@ -35,6 +35,41 @@ class CreateUserView(APIView):
 				user = User(username = username, password = password, name = name, surname = surname, email = email)
 				user.save()
 			return Response(UserSerializer(user).data, status = status.HTTP_200_OK)
+
+class UpdateUserView(generics.UpdateAPIView):
+	serializer_class = UpdateUserSerializer
+	queryset = User.objects.all()
+	lookup_field = "username"
+	# permission_classes = (permissions.IsAuthenticated,)
+
+	def update(self, request, *args, **kwargs):
+		user = self.get_object()
+		user.name = request.data.get("name")
+		user.surname = request.data.get("surname")
+		user.password = request.data.get("password")
+		user.email = request.data.get("email")
+		user.save()
+
+		serializer = self.get_serializer(user)
+		serializer.is_valid(raise_exception=True)
+		self.perform_update(serializer)
+
+		return Response(serializer.data)
+
+# class UpdateUserPasswordView(APIView):
+# 	serializer_class = UpdateUserPasswordSerializer
+
+# 	def post(self,request,format = None):
+# 		serializer = self.serializer_class(data = request.data)
+# 		if serializer.is_valid():
+# 			username = serializer.data.get('username')
+# 			password = password.data.get('password')
+# 			user = User.objects.filter(username = username)
+# 			if user.exists():
+# 				user.password = password
+# 				user.save()
+# 			else:
+# 				return Response("Username cannot be found", status = status.HTTP_400_BAD_REQUEST)
 
 class RecipeView(generics.ListAPIView):
 	queryset = Recipe.objects.all()
