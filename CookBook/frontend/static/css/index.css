@@ -5,19 +5,14 @@ html, body {
 }
 
 #main{
-	position: fixed;
 	width: 100%;
 	height: 100%;
-	left: 0;
-	top: 0;
-	justify-content: center;
 }
 
 #app {
 	width: 100%
 	height: 100%;
 	display: flex;
-	align-content: center;
 	align-items: center;
-	align-self: center;
+	justify-content: center;
 }

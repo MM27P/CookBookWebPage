@@ -68,7 +68,7 @@ export default class RegisterPage extends Component {
       			</Typography>
 				<form onSubmit={this.handleSubmit}>
 				<Paper style={{ padding: 16 }}>
-					<Grid container alignItems="flex-start" spacing={2}>
+					<Grid container spacing={2}>
 						<Grid item xs={12} align="center">
 							<Input 
 								type="text" 

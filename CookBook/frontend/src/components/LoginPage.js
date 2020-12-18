@@ -8,6 +8,8 @@ import {
 	Button,
 } from '@material-ui/core';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
+import DjangoCSRFToken from 'django-react-csrftoken';
+import cookie from "react-cookies";
 
 export default class LoginPage extends Component {
 	constructor(props) {
@@ -28,7 +30,10 @@ export default class LoginPage extends Component {
 			username,
 			password
 		} = this.state;
-
+		console.log("Anything")
+		axios.defaults.xsrfCookieName = "csrftoken";
+		axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+		axios.defaults.headers.post["X-CSRFTOKEN"] = cookie.load("csrftoken");
 		axios.post("http://localhost:8000/api/login", {
 			username: username,
 			password: password
@@ -54,6 +59,7 @@ export default class LoginPage extends Component {
         			LOGIN
       			</Typography>
       			<form onSubmit={this.handleSubmit}>
+      				<DjangoCSRFToken/>
       				<Paper style={{padding: 16}}>
       					<Grid container alignItems="flex-start" spacing={2}>
 						<Grid item xs={12} align="center">
