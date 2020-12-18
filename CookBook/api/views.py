@@ -9,6 +9,7 @@ from .models import User, Recipe
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
+import json
 
 # Create your views here.
 
@@ -115,21 +116,28 @@ class CreateRecipeView(APIView):
 
 def login(request):
 	if request.method == "POST":
-		print(HTTP_400_BAD_REQUEST)
-		username = request.POST['username']
-		password = request.POST['password']
-		user = authenticate(request,username=username,password=password)
-		if user is not None:
-			login(request,user)
-			return HttpResponse("You are logged in right now!")
+		request.data = json.loads(request.body)
+		username = request.data['username']
+		password = request.data['password']
+		print (request.user)
+		print (request.user.is_authenticated)
+		if not request.user.is_authenticated:
+			user = authenticate(request,username=username,password=password)
+			if user is not None:
+				auth_login(request,user)
+				return HttpResponse("You are logged in right now!", status = status.HTTP_200_OK)
+			else:
+				return HttpResponse("Sorry. Cannot login", status = status.HTTP_400_BAD_REQUEST)
 		else:
-			return HttpResponse("Sorry. Cannot login")
-	else:
-		return HttpResponse("Not available", status = status.HTTP_400_BAD_REQUEST)
+			return HttpResponse("Already Authenticated", status = status.HTTP_200_OK)
 
 
+@login_required
 def logout(request):
-	logout(request)
+	if request.user.is_authenticated:
+		auth_logout(request)
+	return HttpResponse("Logged out", status = status.HTTP_200_OK)
+
 
 
 @login_required(login_url='/api/')
