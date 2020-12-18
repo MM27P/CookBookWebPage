@@ -1,0 +1,4 @@
+# This is the line excluding the venv
+CookBookVenv
+CookBookVenv64
+CookBookVenv390amd64

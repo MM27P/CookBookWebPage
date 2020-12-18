@@ -9,3 +9,13 @@ The project is divided into two parts:
 
 Used Frameworks:
  - Django
+<<<<<<< HEAD
+=======
+
+Used Database:
+ - MySQL
+
+ !!!Important Notices!!!
+ 1. If you want for Django to work with MySQL you have to install proper version of mysqlclient. The best option is to download *.whl file and install it using pip.
+ 2. mysqlclient does not work with the newest versions of MySQL e.g. MySQL 8.0. There is a however workaround. There is a need to change the password checking from sha256 caching to standard, because the module mysqlclient does not work with the newest sha256.
+>>>>>>> backend
