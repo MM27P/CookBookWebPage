@@ -6,11 +6,39 @@ import {
 	Grid,
 	Input,
 	Button,
+	Dialog,
+	DialogContent,
+	DialogContentText,
+	DialogTitle,
+	DialogActions
 
 } from '@material-ui/core';
+import { withStyles } from "@material-ui/styles";
 import SaveIcon from '@material-ui/icons/Save';
 
-export default class RegisterPage extends Component {
+const styles = theme => ({
+  	paperRoot: {
+	  	backgroundColor: '#201E50'
+  	},
+  	paperRegisterStyle: {
+  		backgroundColor: "#EFF2F1"
+  	},
+  	title: {
+  		color: "#F5AF31"
+  	},
+  	buttonStyle: {
+  		backgroundColor: "#201E50",
+		color: "#EFF2F1",
+		'&:hover': {
+        backgroundColor: "#403E80",
+    	},
+  	},
+  	popupTitle: {
+  		color: "#201E50",
+  	},
+});	
+
+class RegisterPage extends Component {
 	constructor(props) {
 		super(props);
 
@@ -22,13 +50,17 @@ export default class RegisterPage extends Component {
 			password : "",
 			password_confirmation: "",
 			registrationErrors: "",
+			okDialogOpen: false,
+			wrongDialogOpen: false
 		}
 
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleChange = this.handleChange.bind(this);
+		this.closePopup = this.closePopup.bind(this);
 	}
 
 	handleSubmit(event) {
+		event.preventDefault();
 		const {
 			username,
 			password,
@@ -46,34 +78,50 @@ export default class RegisterPage extends Component {
 		},
 		{ withCredentials: true }
 		).then( response => {
-			console.log("registration res", response)
+			this.setState({
+				okDialogOpen:true,
+				email : "",
+				username : "",
+				name : "",
+				surname : "",
+				password : "",
+				password_confirmation: "",
+			})
 		}).catch(error => {
-			console.log("registration error", error)
+			this.setState({wrongDialogOpen:true})
 		})
-		event.preventDefault();
 	}
 
 	handleChange(event) {
 		this.setState({
 			[event.target.name]: event.target.value
 		})
-		console.log("handle Change",event);
+	}
+
+	closePopup(event) {
+		this.setState({
+			okDialogOpen: false,
+			wrongDialogOpen: false
+		})
 	}
 
 	render() {
+		const { classes }  = this.props;
 		return (
-			<div style={{ padding: 16, margin: 'auto', maxWidth: 600 }}>
-				<Typography variant="h5" align="center" component="h2" gutterBottom>
-        			Register User
+			<Paper classes={{ root: classes.paperRoot}} align = "center" justify = "center" alignItems = "center">
+			<div style={{ padding: 16, margin: 'auto', maxWidth: 600 }}>			
+				<Typography classes={{root: classes.title}} variant="h4" align="center" component="h2" gutterBottom>
+        			REGISTER USER
       			</Typography>
 				<form onSubmit={this.handleSubmit}>
-				<Paper style={{ padding: 16 }}>
+				<Paper classes={{ root: classes.paperRegisterStyle}} style={{ padding: 16 }}>
 					<Grid container spacing={2}>
 						<Grid item xs={12} align="center">
 							<Input 
 								type="text" 
 								name="username" 
 								placeholder="Username" 
+								autoComplete="username"
 								value={this.state.username} 
 								onChange={this.handleChange} 
 								required/>
@@ -83,7 +131,8 @@ export default class RegisterPage extends Component {
 						<Input 
 							type="password" 
 							name="password" 
-							placeholder="Passwrod" 
+							placeholder="Password" 
+							autoComplete="new-password"
 							value={this.state.password} 
 							onChange={this.handleChange} 
 							required/>
@@ -93,7 +142,8 @@ export default class RegisterPage extends Component {
 						<Input 
 							type="password" 
 							name="password_confirmation" 
-							placeholder="Passwrod confirmation" 
+							placeholder="Password confirmation" 
+							autoComplete="new-password"
 							value={this.state.password_confirmation} 
 							onChange={this.handleChange} 
 							required/>
@@ -136,14 +186,42 @@ export default class RegisterPage extends Component {
 								variant="contained"
 	        					color="primary"
 	        					size="large" 
-	        					startIcon={<SaveIcon />}> 
+	        					startIcon={<SaveIcon />}
+	        					classes={{root: classes.buttonStyle}}> 
 	        						Register 
         					</Button>
 						</Grid>
 					</Grid>
 				</Paper>
 				</form>
+				<Dialog open={this.state.okDialogOpen}>
+	      			<DialogTitle classes={{root: classes.popupTitle}}> Registration status </DialogTitle>
+	      			<DialogContent>
+	      				<DialogContentText id="alert-dialog-description">
+	      					You have been registered 
+	      				</DialogContentText>
+	      			</DialogContent>
+	      			<DialogActions>
+						<Button onClick={this.closePopup} color="primary" variant="contained" classes={{root: classes.buttonStyle}}> Great! </Button>
+					</DialogActions>
+	      		</Dialog>
+
+	      		<Dialog open={this.state.wrongDialogOpen} PaperProps={{ style: { backgroundColor: "#F5AF31" } }} >
+	      			<DialogTitle classes={{root: classes.popupTitle}}> Registration status </DialogTitle>
+	      			<DialogContent> 
+	      				<DialogContentText id="alert-dialog-description">
+	      					Something went wrong! Sorry :( 
+	      				</DialogContentText>
+	      			</DialogContent>
+	      			<DialogActions>
+						<Button onClick={this.closePopup} color="primary" variant="contained" classes={{root: classes.buttonStyle}}> OK (sad) </Button>
+					</DialogActions>
+	      		</Dialog>
+	      		
 			</div>	
+			</Paper>
 		);
 	}
 }
+
+export default withStyles(styles, {withTheme: true})(RegisterPage);
