@@ -29,4 +29,4 @@ The project is a website that allows to show desired cooking recipe. It also all
 
    `python CookBook\manage.py runserver`
    
-##
+### Now go and improve your cooking skills :)
