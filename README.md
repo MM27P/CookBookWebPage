@@ -19,7 +19,7 @@ The project is a website that allows to show desired cooking recipe. It also all
 
 ## Installation
 - Clone this repository
-- Edit CookBook\dbconf\my.conf file to make connection with mysql database or create database and user with proper information shown in this file
+- Edit `CookBook\dbconf\my.conf` file to make connection with mysql database or create database and user with proper information shown in this file
 - Activate virtual environment using:
   - Linux: 
   `CookBookVenv390amd64\Scripts\activate`
