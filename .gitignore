@@ -3,3 +3,4 @@ CookBookVenv
 CookBookVenv64
 CookBookVenv390amd64
 CookBook/frontend/node_modules/
+*/__pycache__/*

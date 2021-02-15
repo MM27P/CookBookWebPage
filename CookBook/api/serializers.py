@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import User, Recipe
+from .models import User, Recipe, Like
+from django.contrib.auth.hashers import make_password
 
 class UserSerializer(serializers.ModelSerializer):
 	class Meta:
@@ -18,6 +19,14 @@ class UpdateUserPasswordSerializer(serializers.ModelSerializer):
 		model = User
 		fields = ('id','username','password')
 
+		def to_representation(self,obj):
+			return {
+				"id": obj.id,
+				"username": obj.username,
+				"password": make_password(obj.password)
+			}
+
+
 class UpdateUserSerializer(serializers.ModelSerializer):
 	lookup_field = "username"
 	class Meta:
@@ -29,7 +38,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Recipe
-		fields = ('id','name','creator','ingridients','description','created_at','user')
+		fields = ('id','name','creator','ingridients','description','created_at','image_url','user')
 
 
 class CreateRecipeSerializer(serializers.ModelSerializer):
@@ -37,4 +46,9 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Recipe
-		fields = ('name','creator','ingridients','description','created_at','user')
+		fields = ('name','creator','ingridients','description','created_at','image_url','user')
+
+class Like(serializers.ModelSerializer):
+	class Meta:
+		model = Like
+		fields = ('recipe_id','user_id')
