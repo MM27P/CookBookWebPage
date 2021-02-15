@@ -16,6 +16,7 @@ The project is a website that allows to show desired cooking recipe. It also all
  2. mysqlclient does not work with the newest versions of MySQL e.g. MySQL 8.0. There is a however workaround. There is a need to change the password checking from sha256 caching to standard, because the module mysqlclient does not work with the newest sha256.
 
 ## Installation
+- Clone this repository
 - Edit CookBook\dbconf\my.conf file to make connection with mysql database or create database and user with proper information shown in this file
 - Activate virtual environment using:
   - Linux: 
